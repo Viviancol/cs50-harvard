@@ -1,0 +1,32 @@
+#include <cs50.h>
+#include <stdio.h>
+
+int main(void)
+{
+int inicial;
+do
+    {
+        //solicita populacao inicial
+        inicial = get_int("População Inicial: ");
+    }
+    while (inicial < 9);
+
+int final;
+do
+    {
+        //solicita populacao final
+        final = get_int("População Final: ");
+    }
+    while (final < inicial);
+
+//calcula o numero de anos ate o limite
+int anos = 0;
+while (inicial < final)
+for (anos = 0; inicial < final; anos++)
+    {
+        inicial = inicial + (inicial / 3) - (inicial / 4);
+    }
+    {
+    printf("Years: %i\n" , anos);
+    }
+}
