@@ -1,0 +1,56 @@
+#include <cs50.h>
+#include <stdio.h>
+#include <string.h>
+#include <ctype.h>
+
+int main(int argc, string argv[])
+{
+    int letras = 0;
+    int espaco = 0;
+    int palavras = 0;
+    int frases = 0;
+    float L, S, coleman_liau;
+
+
+        //solicitar o texto
+        string text = get_string("Text: ");
+
+        for (int i = 0, n = strlen(text); i < n; i++)
+        {
+            //contar quantidade de espaço no texto
+            if (text[i] == ' ')
+            {espaco++;
+            }
+            //contar quantidade de letras no texto
+            if ((text[i] >='a' && text[i] <= 'z') || (text[i] >= 'A' && text[i] <= 'Z'))
+            {letras++;
+            }
+            //contar quantidade de frases no texto
+            if ((text[i] == '.' || text[i] == '!' || text[i] == '?'))
+            {frases++;
+            }
+            //contar quantidade de palavras no texto
+            palavras = espaco +1;
+
+            //quantidade de letras a cada 100 palavras
+            L = (float) letras * 100 / (float) palavras;
+            //quantidade de frases a cada 100 palavras
+            S = (float) frases * 100 / (float) palavras;
+
+            coleman_liau = 0.0588 * L - 0.296 * S - 15.8;
+        }
+        //grade
+        if (coleman_liau < 2)
+        {
+            printf("Before Grade 1\n");
+        }
+        else if (coleman_liau > 15)
+        {
+            printf("Grade 16+\n");
+        }
+        else
+        {
+            printf("Grade %.0f\n", coleman_liau);
+        }
+
+}
