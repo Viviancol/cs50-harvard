@@ -1,0 +1,99 @@
+#include <stdio.h>
+#include <cs50.h>
+#include <string.h>
+
+// numero maximo de candidatos
+#define MAX 9
+
+// nome e votos dos candidatos
+typedef struct
+{
+    string name;
+    int votes;
+}
+candidate;
+
+//lista de candidatos
+candidate candidates[MAX];
+
+//numero de candidatos
+int candidate_count;
+
+// prototipo da função
+bool vote(string name);
+void print_winner(void);
+
+int main (int argc, string argv[])
+{
+    //checar invalidade
+    if(argc<2)
+    {
+        printf("Usage:plurality [candidate...] \n");
+        return 1;
+    }
+
+    //lista de candidatos
+    candidate_count = argc - 1;
+    if (candidate_count > MAX)
+    {
+        printf("Maximum number of candidates is %i\n", MAX);
+        return 2;
+    }
+    for (int i = 0; i < candidate_count; i++)
+    {
+        candidates[i].name = argv[i + 1];
+        candidates[i].votes = 0;
+    }
+    int voter_count = get_int("Number of voters: ");
+
+    //loop dos votos
+    for (int i = 0; i < voter_count; i++)
+    {
+        string name = get_string("Vote: ");
+
+        //chegar votos invalidos
+        if (!vote(name))
+        {
+            printf("Invalid vote.\n");
+        }
+    }
+
+    //mostrar vencedor da eleicao
+    print_winner();
+    }
+    //atualizacao dos votos totais
+    bool vote(string name)
+    {
+        //TODO
+        for (int j = 0; j < candidate_count; j++)
+        {
+            if (strcmp(name, candidates[j].name) == 0)
+            {
+                candidates[j].votes++;
+                return true;
+            }
+        }
+        return false;
+    }
+    //mostrar o vencedor ou vencedores da eleicao
+    void print_winner(void)
+    {
+        // TODO
+        int m = 0;
+        for (int k = 0; k < candidate_count; k++)
+        {
+            if (candidates[k].votes > m)
+            {
+                m = candidates[k].votes;
+            }
+        }
+        for (int l = 0; l < candidate_count; l++)
+        {
+            if (candidates[l].votes == m)
+            {
+                printf("%s\n", candidates[l].name);
+            }
+        }
+        return;
+
+}
