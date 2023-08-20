@@ -1,0 +1,153 @@
+// Simulador para a herança genética do tipo sanguíneo
+
+#include <stdbool.h>
+#include <stdio.h>
+#include <stdlib.h>
+#include <time.h>
+
+// cada pessoa tem 2 pais e dois alleles
+typedef struct person
+{
+    struct person *parents[2];
+    char alleles[2];
+}
+person;
+
+const int GENERATIONS = 3;
+const int INDENT_LENGTH = 4;
+
+person *create_family(int generations);
+void print_family(person *p, int generation);
+void free_family(person *p);
+char random_allele();
+
+int main(void)
+{
+    // gerador de numeros aleatorios de geracao
+    srand(time(0));
+
+    // cria uma nova familia com 3 geracoes
+    person *p = create_family(GENERATIONS);
+
+    // mostra a arvore geneologica dos tipos sanguinios
+    print_family(p, 0);
+
+    // memoria livre
+    free_family(p);
+}
+
+// cria um novo individuo com geracoes
+person *create_family(int generations)
+{
+    // TODO: alocar memoria para uma nova pessoa
+    person *new_person = malloc(sizeof(person));
+
+    if(new_person == NULL)
+    {
+        return NULL;
+    }
+
+    // se restarem geracoes para serem criadas
+    if (generations > 1)
+    {
+        // Crie dois novos pais para a pessoa atual chamando recursivamente create_family
+        new_person->parents[0] = create_family(generations - 1);
+        new_person->parents[1] = create_family(generations - 1);
+
+        // TODO: Definir parentesco dos pais para a pessoa atual
+        new_person->alleles[0] = new_person->parents[0]->alleles[rand() % 2];
+        new_person->alleles[1] = new_person->parents[1]->alleles[rand() % 2];
+
+
+    }
+
+    // Se não houver gerações para criar
+    else
+    {
+        // TODO: Definir ponteiros pai para NULL
+        new_person->parents[0] = NULL;
+        new_person->parents[1] = NULL;
+
+        // TODO: Atribuir alleles aleatoriamente
+         new_person->alleles[0] = random_allele();
+         new_person->alleles[1] = random_allele();
+
+    }
+
+    // TODO: retornar a pessoa recem criada
+    return new_person;
+}
+
+// Livre `p` e todos os ancestrais de `p`.
+void free_family(person *p)
+{
+    // TODO: Lidar com caixa básica
+    if(p == NULL)
+    {
+        return;
+    }
+
+    // TODO: Pais livres recursivamente
+    free_family(p->parents[0]);
+    free_family(p->parents[1]);
+
+    // TODO: Free child
+    free(p);
+
+}
+
+// Imprima cada membro da família e seus alleles.
+void print_family(person *p, int generation)
+{
+    // Handle base case
+    if (p == NULL)
+    {
+        return;
+    }
+
+    // Print identidade
+    for (int i = 0; i < generation * INDENT_LENGTH; i++)
+    {
+        printf(" ");
+    }
+
+    // Print pessoa
+    if (generation == 0)
+    {
+        printf("Child (Generation %i): blood type %c%c\n", generation, p->alleles[0], p->alleles[1]);
+    }
+    else if (generation == 1)
+    {
+        printf("Parent (Generation %i): blood type %c%c\n", generation, p->alleles[0], p->alleles[1]);
+    }
+    else
+    {
+        for (int i = 0; i < generation - 2; i++)
+        {
+            printf("Great-");
+        }
+        printf("Grandparent (Generation %i): blood type %c%c\n", generation, p->alleles[0], p->alleles[1]);
+    }
+
+    // Imprimir pais da geração atual
+    print_family(p->parents[0], generation + 1);
+    print_family(p->parents[1], generation + 1);
+}
+
+// Escolhe aleatoriamente um tipo de sangue allele.
+char random_allele()
+{
+    int r = rand() % 3;
+    if (r == 0)
+    {
+        return 'A';
+    }
+    else if (r == 1)
+    {
+        return 'B';
+    }
+    else
+    {
+        return 'O';
+    }
+}
